@@ -47,6 +47,14 @@ async def download_file():
     return {"message": msg}
 
 
+def generate_style():
+    return """
+    <style>
+        body { font-size: 1.75vw; font-family: math; }
+        li:nth-child(odd) { background: #f0f0f0; }
+    </style>
+    """
+
 @app.get("/", response_class=HTMLResponse)
 @app.get("/files", response_class=HTMLResponse)
 async def list_files(page: int = 1):
@@ -64,7 +72,9 @@ async def list_files(page: int = 1):
     start = (page - 1) * page_size
     end = start + page_size
     files_page = files[start:end]
-    html = f"<h2>{title} (Page {page} of {total_pages})</h2><ul>"
+    html = ''
+    html += generate_style()
+    html += f"<h2>{title} (Page {page} of {total_pages})</h2><ul>"
     for file in files_page:
         html += f'<li><a href="/download_file?filename={file}">{file}</a></li>'
     html += "</ul>"
